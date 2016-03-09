@@ -32,7 +32,6 @@ StorkPrimaryGeneratorAction::StorkPrimaryGeneratorAction(
     shape = infile->GetUniformDistributionShape();
     origin = infile->GetInitialSourcePos();
     initialSource = false;
-    primaryData = NULL;
     normalize = infile->GetRenormalizeAfterRun();
     instantDelayed = infile->GetInstantDelayed();
     precursorDelayed = infile->GetPrecursorDelayed();
@@ -40,6 +39,9 @@ StorkPrimaryGeneratorAction::StorkPrimaryGeneratorAction(
     theNav = G4TransportationManager::GetTransportationManager()->
     GetNavigatorForTracking();
     sourcefileDelayed = infile->GetSourceFileDelayed();
+
+    delayedNeutronGenerator=NULL;
+    primaryData=NULL;
 
     // Set initial source files (on master only)
     if(master)

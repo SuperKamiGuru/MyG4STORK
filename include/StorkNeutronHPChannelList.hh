@@ -35,6 +35,8 @@
 #include "globals.hh"
 #include "StorkNeutronHPChannel.hh"
 #include "G4StableIsotopes.hh"
+#include "StorkInteractStat.hh"
+#include "STORKEnergyDistScore.hh"
 
 class G4Element;
 class G4HadFinalState;
@@ -103,6 +105,8 @@ class StorkNeutronHPChannelList
   G4StableIsotopes theStableOnes;
 
   G4HadFinalState unChanged;
+
+  G4int MTRList[36];
 };
 
 #endif

@@ -49,6 +49,11 @@
     }
     allChannelsCreated = false;
     theInitCount = 0;
+    G4int temp[36] = {4,5,11,16,17,22,23,24,25,28,29,-1,32,33,34,-1,-1,37,41,42,44,45,103,104,105,106,107,108,-1,111,112,-1,113,115,116,117};
+    for(G4int i=0; i<36; i++)
+    {
+       MTRList[i] = temp[i];
+    }
   }
 
   StorkNeutronHPChannelList::StorkNeutronHPChannelList(G4double finalStateTemp)
@@ -58,6 +63,11 @@
     allChannelsCreated = false;
     theInitCount = 0;
     fsTemp = finalStateTemp;
+    G4int temp[36] = {4,5,11,16,17,22,23,24,25,28,29,-1,32,33,34,-1,-1,37,41,42,44,45,103,104,105,106,107,108,-1,111,112,-1,113,115,116,117};
+    for(G4int i=0; i<36; i++)
+    {
+       MTRList[i] = temp[i];
+    }
   }
 
   StorkNeutronHPChannelList::~StorkNeutronHPChannelList()
@@ -166,6 +176,13 @@
       if(running[nChannels-1] != 0) if(random<running[i]/running[nChannels-1]) break;
     }
     delete [] running;
+    if(lChan!=0)
+    {
+//        StorkInteractStat* interactStat;
+//        interactStat->IncrementReacCount(MTRList[lChan]);
+    }
+//    STORKEnergyDistScore *EnergyScore;
+//    EnergyScore->SetIso(targZ*1000+targA);
     return theChannels[lChan]->ApplyYourself(aTrack, isotope);
   }
 

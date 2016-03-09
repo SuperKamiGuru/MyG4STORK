@@ -70,6 +70,10 @@ StorkRunManager::StorkRunManager(const StorkParseInput* infile)
     {
         heatTransfer = new StorkHeatTransfer(infile);
     }
+    else
+    {
+        heatTransfer=NULL;
+    }
 
 	// Initialize flags and values
     convergenceLimit = infile->GetConvergenceLimit();
@@ -225,6 +229,9 @@ void StorkRunManager::BeamOn(G4int n_event, const char* macroFile,
 {
     //G4cout << " made it to the beginning of the StorkRunManager::BeamOn" << G4endl;
     G4bool cond = ConfirmBeamOnCondition();
+    StorkInteractStat intrctStat;
+    STORKEnergyDistScore *EnergyScore;
+
     if(cond)
     {
 
@@ -237,10 +244,14 @@ void StorkRunManager::BeamOn(G4int n_event, const char* macroFile,
         {
             while(runIDCounter < numRuns)
             {
+//                intrctStat.ZeroReacCount();
+//                EnergyScore->ResetScoreTable();
                 // Process the run
                 RunInitialization();
                 DoEventLoop(n_event,macroFile,n_select);
                 RunTermination();
+
+//                intrctStat.PrintReacCount();
 
                 // Record the important results of the run
                 TallyRunResults();
@@ -267,6 +278,8 @@ void StorkRunManager::BeamOn(G4int n_event, const char* macroFile,
 
 
                 }
+
+//                EnergyScore->PrintData();
             }
 
             // Save the final source distribution if the save interval is not

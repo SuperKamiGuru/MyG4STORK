@@ -25,6 +25,10 @@ StorkNeutronPhysicsList::StorkNeutronPhysicsList(const StorkParseInput* infile)
     infile->GetPeriodicBCVector(periodicBCVec);
     infile->GetReflectBCVector(reflectBCVec);
 
+    theHPNeutron=NULL;
+    theBertiniNeutron=NULL;
+    theNeutrons=NULL;
+
     // Insure that the slave processes do not output the physics process table
 #ifdef G4USE_TOPC
 	if(!TOPC_is_master())
@@ -39,10 +43,13 @@ StorkNeutronPhysicsList::StorkNeutronPhysicsList(const StorkParseInput* infile)
 // Destructor
 StorkNeutronPhysicsList::~StorkNeutronPhysicsList()
 {
-    delete theHPNeutron;
+    if(theHPNeutron)
+        delete theHPNeutron;
     //delete theLEPNeutron;
-    delete theBertiniNeutron;
-    delete theNeutrons;
+    if(theBertiniNeutron)
+        delete theBertiniNeutron;
+    if(theNeutrons)
+        delete theNeutrons;
 }
 
 
@@ -83,7 +90,7 @@ void StorkNeutronPhysicsList::ConstructProcess()
 
     // Create and register the builders
     theNeutrons->RegisterMe(theHPNeutron = new StorkHPNeutronBuilder(csDirName));
-    theNeutrons->RegisterMe(theBertiniNeutron = new G4BertiniNeutronBuilder);
+//    theNeutrons->RegisterMe(theBertiniNeutron = new G4BertiniNeutronBuilder);
     //theNeutrons->RegisterMe(theLEPNeutron = new G4LEPNeutronBuilder);
 
     // Set the minimum and maximum energies for the NeutronHP processes
@@ -91,8 +98,8 @@ void StorkNeutronPhysicsList::ConstructProcess()
     theHPNeutron->SetMaxEnergy(20.*MeV);
 
     // Set the minimum and maximum energies for the Bertini processes
-    theBertiniNeutron->SetMinEnergy(20.0*MeV);
-    theBertiniNeutron->SetMaxEnergy(9.9*GeV);
+//    theBertiniNeutron->SetMinEnergy(20.0*MeV);
+//    theBertiniNeutron->SetMaxEnergy(9.9*GeV);
 
    /* // Set the minimum and maximum energies for the LEP processes
     theLEPNeutron->SetMinEnergy(20.0*MeV);

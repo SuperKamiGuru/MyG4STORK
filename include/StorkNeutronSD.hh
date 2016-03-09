@@ -44,6 +44,9 @@ the ProcessHits() function of the class.
 #include "G4ThreeVector.hh"
 #include "G4UnitsTable.hh"
 #include "G4ios.hh"
+#include "StorkInteractStat.hh"
+#include "STORKEnergyDistScore.hh"
+
 
 // Class forward declarations
 class StorkRunManager;

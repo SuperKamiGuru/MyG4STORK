@@ -89,6 +89,8 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
     phTimer.Start();
 #endif
 
+    STORKEnergyDistScore *EnergyScore;
+
 	// Get the track for the current particle
     G4Track *aTrack = aStep->GetTrack();
 
@@ -139,7 +141,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 //#ifdef STORK_EXPLICIT_LOSS
 //            nEner++;
 //#endif
-            (*itr)->SetKineticEnergy(20.0*MeV);
+            (*itr)->SetKineticEnergy(19.9*MeV);
         }
     }
 
@@ -151,7 +153,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 //        nEner++;
 //#endif
 //        return true;
-        aTrack->SetKineticEnergy(20.0*MeV);
+        aTrack->SetKineticEnergy(19.9*MeV);
     }
 
     // If the neutron is a primary neutron, on its first step, fix the lifetime
@@ -207,6 +209,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
         }
 	}
 
+    StorkInteractStat intrctStat;
 
 	// Record the site of the fission and the lifetime of the incident neutron.
 	// Also update the neutron production and loss totals, and save any delayed
@@ -219,6 +222,8 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
         // Record number of daughter neutrons
         for( ; itr != trackVector->end(); itr++)
         {
+            (*itr)->SetKineticEnergy(2);
+//            EnergyScore->ScoreParticle(preStepPoint->GetKineticEnergy(), aTrack->GetKineticEnergy());
             if((*itr)->GetTrackStatus()!=fKillTrackAndSecondaries)
             {
                 // Check if secondary is a neutron
@@ -296,6 +301,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 	// lifetime.
 	else if(hitProcess == "StorkHadronCapture")
 	{
+//        intrctStat.IncrementReacCount(102);
 		nLoss++;
 		totalLifetime += lifetime;
 
@@ -325,6 +331,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 
 		for( ; itr != trackVector->end(); itr++)
 		{
+            (*itr)->SetKineticEnergy(2);
             if((*itr)->GetTrackStatus()!=fKillTrackAndSecondaries)
             {
                 // Set the neutrons lifetime to that of the current neutron
@@ -362,6 +369,17 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 	// If an elastic collision occurs kill any secondaries (uranium atom, etc.)
 	else if(hitProcess == "StorkHadronElastic")
 	{
+//        aTrack->SetKineticEnergy(2);
+        if(aTrack->GetKineticEnergy()<1.0E-11*MeV)
+        {
+            aTrack->SetTrackStatus(fStopAndKill);
+        }
+        if(aTrack->GetTrackStatus()==fStopAndKill)
+        {
+            nEner++;
+//            nLoss++;
+        }
+//        intrctStat.IncrementReacCount(2);
 		//trackVector = const_cast<G4TrackVector*>(aStep->GetSecondary());
 		itr = trackVector->begin();
 

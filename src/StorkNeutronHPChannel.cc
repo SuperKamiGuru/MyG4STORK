@@ -92,15 +92,23 @@
     if(count == 0||registerCount!=0) count +=
          theStableOnes.GetNumberOfIsotopes(Z);
     niso = count;
-    delete [] theIsotopeWiseData;
+
+    if(theIsotopeWiseData)
+        delete [] theIsotopeWiseData;
     theIsotopeWiseData = new G4NeutronHPIsoData [niso];
-    delete [] active;
+
+    if(active)
+        delete [] active;
     active = new G4bool[niso];
 
-    delete [] theFinalStates;
+    if(theFinalStates)
+        delete [] theFinalStates;
     theFinalStates = new G4NeutronHPFinalState * [niso];
-    delete theChannelData;
+
+    if(theChannelData)
+        delete theChannelData;
     theChannelData = new G4NeutronHPVector;
+
     for(G4int i=0; i<niso; i++)
     {
       theFinalStates[i] = theFS->New();
@@ -208,7 +216,8 @@
         theMerge->SetData(m_tmp++, aPassive->GetEnergy(p), aPassive->GetXsec(p));
       p++;
     }
-    delete theStore;
+    if(theStore)
+        delete theStore;
     theStore = theMerge;
   }
 
@@ -272,11 +281,15 @@
       }
       if(it==niso) it--;
     }
-    delete [] xsec;
+    if(xsec)
+        delete [] xsec;
     G4HadFinalState * theFinalState=0;
     const G4int A = (G4int)this->GetN(it);
     const G4int Z = (G4int)this->GetZ(it);
     const G4int M = (G4int)this->GetM(it);
+
+//    STORKEnergyDistScore *EnergyScore;
+//    EnergyScore->SetIso(Z*1000+A);
 
                                        //-2:Marker for Fission
     if(wendtFissionGenerator&&anIsotope==-2)

@@ -84,40 +84,42 @@ void StorkNeutronProcessBuilder::Build()
 
         // Only build low energy models for the elastic processes
         if(aHPBuilder)
-            (*i)->Build(theNeutronElastic);
+        {
+             (*i)->Build(theNeutronElastic);
+        }
 
         (*i)->Build(theNeutronInelastic);
         (*i)->Build(theNeutronCapture);
         (*i)->Build(theNeutronFission);
     }
 
-    // Create the high energy elastic model
-    theHighElasticModel = new G4DiffuseElastic();
-    theHighElasticModel->SetMinEnergy(20.0*MeV);
-    theHighElasticModel->SetMaxEnergy(20000.*GeV);
+//    // Create the high energy elastic model
+//    theHighElasticModel = new G4DiffuseElastic();
+//    theHighElasticModel->SetMinEnergy(20.0*MeV);
+//    theHighElasticModel->SetMaxEnergy(20000.*GeV);
+//
+//    // Register model with elastic process
+//    theNeutronElastic->RegisterMe(theHighElasticModel);
 
-    // Register model with elastic process
-    theNeutronElastic->RegisterMe(theHighElasticModel);
-
-    // Create the high energy fission model
-    theHighFissionModel = new G4LFission();
-
-    // Set the minimum energy limit
-    theHighFissionModel->SetMinEnergy(20.0*MeV);
-    theHighFissionModel->SetMaxEnergy(20000.*GeV);
-
-    // Register model with fission process
-    theNeutronFission->RegisterMe(theHighFissionModel);
-
-    theHighCaptureModel = new G4NeutronRadCapture();
-
-    // Set the minimum energy limit
-    theHighCaptureModel->SetMinEnergy(20.0*MeV);
-    theHighCaptureModel->SetMaxEnergy(20000.*GeV);
-
-
-    // Register model with fission process
-    theNeutronCapture->RegisterMe(theHighCaptureModel);
+//    // Create the high energy fission model
+//    theHighFissionModel = new G4LFission();
+//
+//    // Set the minimum energy limit
+//    theHighFissionModel->SetMinEnergy(20.0*MeV);
+//    theHighFissionModel->SetMaxEnergy(20000.*GeV);
+//
+//    // Register model with fission process
+//    theNeutronFission->RegisterMe(theHighFissionModel);
+//
+//    theHighCaptureModel = new G4NeutronRadCapture();
+//
+//    // Set the minimum energy limit
+//    theHighCaptureModel->SetMinEnergy(20.0*MeV);
+//    theHighCaptureModel->SetMaxEnergy(20000.*GeV);
+//
+//
+//    // Register model with fission process
+//    theNeutronCapture->RegisterMe(theHighCaptureModel);
 
     // Add processes to the process manager
     G4ProcessManager * theProcMan = G4Neutron::Neutron()->GetProcessManager();

@@ -79,6 +79,8 @@ StorkParallelRunManager::~StorkParallelRunManager()
 void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
                                      G4int n_select)
 {
+    StorkInteractStat intrctStat;
+    STORKEnergyDistScore *EnergyScore;
     G4bool cond = ConfirmBeamOnCondition();
     if(cond)
     {
@@ -90,8 +92,17 @@ void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
 
         if(n_event>0)
         {
+            if(!TOPC_is_master())
+            {
+//                EnergyScore->ResetScoreTable();
+            }
             while(runIDCounter < numRuns)
             {
+                if(!TOPC_is_master())
+                {
+//                    intrctStat.ZeroReacCount();
+                }
+
                 // Only initialize run now on the master, the slaves must
                 // initialize AFTER any geometry changes proposed by the master
                 if(TOPC_is_master()) RunInitialization();
@@ -124,6 +135,16 @@ void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
                     SaveSourceDistribution(saveFile);
                     if(saveFissionData) SaveFissionDistribution(fissionFile);
                 }
+
+                if(!TOPC_is_master())
+                {
+//                    intrctStat.PrintReacCount();
+                }
+            }
+
+            if(!TOPC_is_master())
+            {
+//                EnergyScore->PrintData();
             }
 
             // Save the final source distribution if the save interval is not

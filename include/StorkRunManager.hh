@@ -29,6 +29,8 @@ distribtion converges within the given limit (default is 3%).
 #include "StorkContainers.hh"
 #include "StorkInterpManager.hh"
 #include "StorkMatPropChange.hh"
+#include "StorkInteractStat.hh"
+
 
 // Include Geant4 header files
 #include "G4RunManager.hh"
@@ -43,6 +45,8 @@ distribtion converges within the given limit (default is 3%).
 #include <sstream>
 #include <list>
 #include <cmath>
+
+#include "STORKEnergyDistScore.hh"
 
 
 // Class forward declarations

@@ -33,6 +33,10 @@ StorkNeutronHPCSData::StorkNeutronHPCSData(char aType, G4String dirName, G4doubl
 	numMaxOL = INT_MAX;
     reactionType = aType;
     fsTemp = FSTemp;
+    ke_cache=0;
+    element_cache=0;
+    material_cache=0;
+    xs_cache=0;
 
     BuildPhysicsTable(*G4Neutron::Neutron(), dirName);
 }

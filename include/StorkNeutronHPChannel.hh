@@ -50,6 +50,7 @@
 #include "G4NeutronHPFinalState.hh"
 #include "G4Element.hh"
 #include "G4WendtFissionFragmentGenerator.hh"
+#include "STORKEnergyDistScore.hh"
 
 class StorkNeutronHPChannel
 {

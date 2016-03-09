@@ -234,7 +234,9 @@ void StorkRunAction::BeginOfRunAction(const G4Run *aRun)
                 << "    keff     "
                 << "FS Shannon H "
                 << " S Shannon H "
-                << "Duration (s) ";
+                << "Duration (s) "
+                << "Avg Yield    "
+                << "# of Fissions";
         if(neutronFluxCalc){
             *output << "Flux (n cm^-2 s^-1) ";
             underline = 150;
@@ -377,7 +379,9 @@ void StorkRunAction::EndOfRunAction(const G4Run *aRun)
             << std::setw(12) << std::setprecision(4) << std::fixed
             << shannonEntropy[1] << " "
             << std::resetiosflags(std::ios_base::floatfield)
-            << std::setw(12) << runTimer.GetRealElapsed();
+            << std::setw(12) << runTimer.GetRealElapsed()
+            << std::setw(12) << G4double(survivors.size())/totalFS
+            << std::setw(12) << totalFS;
     if(neutronFluxCalc){
         *output << std::setw(12) << std::setprecision(4)
                 << neutronFlux;
