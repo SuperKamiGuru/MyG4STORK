@@ -90,6 +90,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 #endif
 
     STORKEnergyDistScore *EnergyScore;
+    STORKIsoReacScore *isoReacScore;
 
 	// Get the track for the current particle
     G4Track *aTrack = aStep->GetTrack();
@@ -216,6 +217,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 	// neutron daughters.
 	if(hitProcess == "StorkHadronFission")
 	{
+//        isoReacScore->ScoreParticle(preStepPoint->GetKineticEnergy(),2);
         //trackVector = const_cast<G4TrackVector*>(aStep->GetSecondary());
         itr = trackVector->begin();
 
@@ -301,6 +303,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 	// lifetime.
 	else if(hitProcess == "StorkHadronCapture")
 	{
+//        isoReacScore->ScoreParticle(preStepPoint->GetKineticEnergy(),1);
 //        intrctStat.IncrementReacCount(102);
 		nLoss++;
 		totalLifetime += lifetime;
@@ -324,6 +327,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 	// daughter neutrons. Update the production and loss totals.
 	else if(hitProcess == "StorkNeutronInelastic")
 	{
+//        isoReacScore->ScoreParticle(preStepPoint->GetKineticEnergy(),3);
 		G4bool nMulti = false;
 
 		//trackVector = const_cast<G4TrackVector*>(aStep->GetSecondary());
@@ -369,6 +373,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 	// If an elastic collision occurs kill any secondaries (uranium atom, etc.)
 	else if(hitProcess == "StorkHadronElastic")
 	{
+//        isoReacScore->ScoreParticle(preStepPoint->GetKineticEnergy(),0);
 //        aTrack->SetKineticEnergy(2);
         if(aTrack->GetKineticEnergy()<1.0E-11*MeV)
         {

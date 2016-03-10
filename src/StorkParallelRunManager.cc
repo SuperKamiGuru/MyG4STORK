@@ -81,6 +81,8 @@ void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
 {
     StorkInteractStat intrctStat;
     STORKEnergyDistScore *EnergyScore;
+    STORKIsoReacScore *isoReacScore;
+    StorkIsoStat *isoStat;
     G4bool cond = ConfirmBeamOnCondition();
     if(cond)
     {
@@ -95,12 +97,14 @@ void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
             if(!TOPC_is_master())
             {
 //                EnergyScore->ResetScoreTable();
+//                isoReacScore->ResetScoreTable();
             }
             while(runIDCounter < numRuns)
             {
                 if(!TOPC_is_master())
                 {
 //                    intrctStat.ZeroReacCount();
+//                        isoStat->ZeroIsoCount();
                 }
 
                 // Only initialize run now on the master, the slaves must
@@ -139,12 +143,14 @@ void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
                 if(!TOPC_is_master())
                 {
 //                    intrctStat.PrintReacCount();
+//                        isoStat->PrintIsoCount();
                 }
             }
 
             if(!TOPC_is_master())
             {
 //                EnergyScore->PrintData();
+//                isoReacScore->PrintData();
             }
 
             // Save the final source distribution if the save interval is not

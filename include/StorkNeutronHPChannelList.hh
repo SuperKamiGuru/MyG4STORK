@@ -37,6 +37,8 @@
 #include "G4StableIsotopes.hh"
 #include "StorkInteractStat.hh"
 #include "STORKEnergyDistScore.hh"
+#include "StorkIsoStat.hh"
+#include "STORKIsoReacScore.hh"
 
 class G4Element;
 class G4HadFinalState;

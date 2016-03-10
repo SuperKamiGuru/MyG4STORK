@@ -51,6 +51,8 @@
 #include "G4Element.hh"
 #include "G4WendtFissionFragmentGenerator.hh"
 #include "STORKEnergyDistScore.hh"
+#include "StorkIsoStat.hh"
+#include "STORKIsoReacScore.hh"
 
 class StorkNeutronHPChannel
 {

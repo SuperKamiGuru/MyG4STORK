@@ -46,6 +46,7 @@ the ProcessHits() function of the class.
 #include "G4ios.hh"
 #include "StorkInteractStat.hh"
 #include "STORKEnergyDistScore.hh"
+#include "STORKIsoReacScore.hh"
 
 
 // Class forward declarations

@@ -47,6 +47,9 @@ distribtion converges within the given limit (default is 3%).
 #include <cmath>
 
 #include "STORKEnergyDistScore.hh"
+#include "StorkIsoStat.hh"
+#include "STORKIsoReacScore.hh"
+
 
 
 // Class forward declarations

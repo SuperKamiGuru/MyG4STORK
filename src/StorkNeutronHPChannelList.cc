@@ -183,6 +183,13 @@
     }
 //    STORKEnergyDistScore *EnergyScore;
 //    EnergyScore->SetIso(targZ*1000+targA);
+
+//    STORKIsoReacScore *isoReacScore;
+//    isoReacScore->SetIso(targZ*1000+targA);
+
+//    StorkIsoStat *isoStat;
+//    isoStat->IncIsoCount(targZ*1000+targA);
+
     return theChannels[lChan]->ApplyYourself(aTrack, isotope);
   }
 

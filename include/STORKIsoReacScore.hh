@@ -1,5 +1,5 @@
-#ifndef STORKENERGYDISTSCORE_HH
-#define STORKENERGYDISTSCORE_HH
+#ifndef STORKIsoReacScore_HH
+#define STORKIsoReacScore_HH
 
 #include <iostream>
 #include <fstream>
@@ -11,11 +11,11 @@
 
 using namespace std;
 
-class STORKEnergyDistScore
+class STORKIsoReacScore
 {
     public:
-        STORKEnergyDistScore(int rankID);
-        virtual ~STORKEnergyDistScore();
+        STORKIsoReacScore(int rankID);
+        virtual ~STORKIsoReacScore();
         static void InitData()
         {
             G4Isotope *isotope;
@@ -53,7 +53,7 @@ class STORKEnergyDistScore
                 outNeutData[i] = new int* [261];
                 for(int j=0; j<261; j++)
                 {
-                    outNeutData[i][j] = new int[261];
+                    outNeutData[i][j] = new int[4];
                 }
             }
 
@@ -90,7 +90,7 @@ class STORKEnergyDistScore
             {
                 for(int i=0; i<261; i++)
                 {
-                    for(int j=0; j<261; j++)
+                    for(int j=0; j<4; j++)
                     {
                         outNeutData[k][i][j]=0;
                     }
@@ -101,7 +101,7 @@ class STORKEnergyDistScore
         {
             isoName=ZA;
         }
-        static void ScoreParticle(double EnerIn, double EnerOut)
+        static void ScoreParticle(double EnerIn, int reacIndx)
         {
             int isotope=0;
             for(; isotope<numIso; isotope++)
@@ -131,19 +131,7 @@ class STORKEnergyDistScore
                 }
             }
 
-            if(EnerOut<1.0E-14)
-                EnerOut=-100;
-            else
-                EnerOut=log10(EnerOut);
-
-            for(int i=0; i<261; i++)
-            {
-                if(EnerOut<=binBounds[i]||i==261)
-                {
-                    outNeutData[isotope][enerIndx][i]=outNeutData[isotope][enerIndx][i]+1;
-                    break;
-                }
-            }
+            outNeutData[isotope][enerIndx][reacIndx]=outNeutData[isotope][enerIndx][reacIndx]+1;
         }
         static void PrintData()
         {
@@ -154,40 +142,39 @@ class STORKEnergyDistScore
             {
                 stream << fileName << isoNameList[k] << "Slave" << procRank << ".txt";
                 tempFileName = stream.str();
-                ofstream enerDistFile (tempFileName.c_str(),std::ofstream::out);
+                ofstream isoReacFile (tempFileName.c_str(),std::ofstream::out);
 
-                if (!enerDistFile)
+                if (!isoReacFile)
                 {
                     cout << "Failed to open file" << endl;
                     return;
                 }
 
-                enerDistFile.fill(' ');
-                enerDistFile.precision(6);
+                isoReacFile.fill(' ');
+                isoReacFile.precision(6);
 
-                enerDistFile << "MCNP Energy Dist Samples" << endl;
-                enerDistFile << 261 << endl;
-                enerDistFile << 261 << '\n' << endl;
+                isoReacFile << "MCNP Energy Dist Samples" << endl;
+                isoReacFile << 261 << '\n' << endl;
                 for(int i=0; i<261; i++)
                 {
-                    enerDistFile << std::setw(14) << binBounds[i];
+                    isoReacFile << std::setw(14) << binBounds[i];
                     if(((i+1)%6==0)||(i==260))
-                        enerDistFile << endl;
+                        isoReacFile << endl;
                 }
-                enerDistFile << endl;
+                isoReacFile << endl;
 
                 for(int i=0; i<261; i++)
                 {
-                    for(int j=0; j<261; j++)
+                    for(int j=0; j<4; j++)
                     {
-                        enerDistFile << std::setw(14) << outNeutData[k][i][j];
-                        if(((j+1)%6==0)||(j==260))
-                            enerDistFile << endl;
+                        isoReacFile << std::setw(14) << outNeutData[k][i][j];
+                        if((j==4))
+                            isoReacFile << endl;
                     }
                 }
-                enerDistFile << endl;
+                isoReacFile << endl;
 
-                enerDistFile.close();
+                isoReacFile.close();
             }
         }
 
@@ -202,4 +189,4 @@ class STORKEnergyDistScore
     private:
 };
 
-#endif // STORKENERGYDISTSCORE_HH
+#endif // STORKIsoReacScore_HH

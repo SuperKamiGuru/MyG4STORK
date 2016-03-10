@@ -231,6 +231,8 @@ void StorkRunManager::BeamOn(G4int n_event, const char* macroFile,
     G4bool cond = ConfirmBeamOnCondition();
     StorkInteractStat intrctStat;
     STORKEnergyDistScore *EnergyScore;
+    StorkIsoStat *isoStat;
+    STORKIsoReacScore *isoReacScore;
 
     if(cond)
     {
@@ -246,12 +248,15 @@ void StorkRunManager::BeamOn(G4int n_event, const char* macroFile,
             {
 //                intrctStat.ZeroReacCount();
 //                EnergyScore->ResetScoreTable();
+//                isoReacScore->ResetScoreTable();
+//                    isoStat->ZeroIsoCount();
                 // Process the run
                 RunInitialization();
                 DoEventLoop(n_event,macroFile,n_select);
                 RunTermination();
 
 //                intrctStat.PrintReacCount();
+//                isoStat->PrintIsoCount();
 
                 // Record the important results of the run
                 TallyRunResults();
@@ -280,6 +285,7 @@ void StorkRunManager::BeamOn(G4int n_event, const char* macroFile,
                 }
 
 //                EnergyScore->PrintData();
+//                isoReacScore->PrintData();
             }
 
             // Save the final source distribution if the save interval is not

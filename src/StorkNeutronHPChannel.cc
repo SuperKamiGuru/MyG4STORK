@@ -291,6 +291,12 @@
 //    STORKEnergyDistScore *EnergyScore;
 //    EnergyScore->SetIso(Z*1000+A);
 
+//    STORKIsoReacScore *isoReacScore;
+//    isoReacScore->SetIso(Z*1000+A);
+
+//    StorkIsoStat *isoStat;
+//    isoStat->IncIsoCount(Z*1000+A);
+
                                        //-2:Marker for Fission
     if(wendtFissionGenerator&&anIsotope==-2)
     {
