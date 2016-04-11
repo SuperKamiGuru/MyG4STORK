@@ -12,7 +12,7 @@ STORKIsoReacScore::STORKIsoReacScore(int rankID)
 {
     stringstream stream;
 
-    fileName = "/home/SuperKamiGuru/NuclearSim/G4STORKIsoReac/IsoReac";
+    fileName = "/home/SuperKamiGuru/NuclearSim/G4STORKIsoReac/";
     procRank = rankID;
 }
 

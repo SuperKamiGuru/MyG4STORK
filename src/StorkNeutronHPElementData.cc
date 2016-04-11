@@ -90,7 +90,10 @@
     count = 0;
     G4int nIso = theElement->GetNumberOfIsotopes();
     G4int Z = static_cast<G4int> (theElement->GetZ());
-    G4double temp = elem->GetTemperature();
+
+    G4double temp=0;
+    if(elem)
+        temp = elem->GetTemperature();
 
     GetDirList(temp, csDataTempVec, csDataNameVec);
     //G4int i1;
@@ -122,7 +125,8 @@
         if(check)
         {
             dirName=dirName+csDataNameVec[index];
-            elem->SetCSDataTemp(csDataTempVec[index]);
+            if(elem)
+                elem->SetCSDataTemp(csDataTempVec[index]);
             for (G4int i1=0; i1<nIso; i1++)
             {
                 //        G4cout <<" Init: normal case"<<G4endl;
@@ -170,7 +174,8 @@
         if(check)
         {
             dirName=dirName+csDataNameVec[index];
-            elem->SetCSDataTemp(csDataTempVec[index]);
+            if(elem)
+                elem->SetCSDataTemp(csDataTempVec[index]);
             for(G4int i1=0; i1<theStableOnes.GetNumberOfIsotopes(static_cast<G4int>(theElement->GetZ()) ); i1++)
             {
             //        G4cout <<" Init: theStableOnes in the loop"<<G4endl;

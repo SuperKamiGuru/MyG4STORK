@@ -108,6 +108,14 @@
   		                                                      theMaterial->GetElement(i),
   								      std::max(0., theMaterial->GetTemperature()-fsTemp)));
         xSec[i] *= rWeight;
+//        if((*theFission[index]).GetXsec(aTrack.GetKineticEnergy())!=0.)
+//        {
+//            xSec[i] = rWeight;
+//        }
+//        else
+//        {
+//            xSec[i] = 0;
+//        }
         sum+=xSec[i];
       }
       G4double random = G4UniformRand();
@@ -122,6 +130,7 @@
       delete [] xSec;
     }
     //return theFission[index].ApplyYourself(aTrack);                 //-2:Marker for Fission
+//    G4double kineticEnergy=aTrack.GetKineticEnergy();
     G4HadFinalState* result = (*theFission[index]).ApplyYourself(aTrack,-2);
 
     //Overwrite target parameters
@@ -139,6 +148,7 @@
     aNucleus.SetIsotope( target_isotope );
 
     G4NeutronHPManager::GetInstance()->CloseReactionWhiteBoard();
+
     return result;
   }
 

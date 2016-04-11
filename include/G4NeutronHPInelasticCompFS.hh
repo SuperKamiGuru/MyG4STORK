@@ -33,7 +33,7 @@
 #include "G4HadFinalState.hh"
 #include "G4NeutronHPFinalState.hh"
 #include "G4NeutronHPAngular.hh"
-#include "G4NeutronHPEnergyDistribution.hh"
+#include "./G4NeutronHPEnergyDistribution.hh"
 #include "G4NeutronHPEnAngCorrelation.hh"
 #include "G4NeutronHPPhotonDist.hh"
 #include "G4NeutronHPDeExGammas.hh"

@@ -84,7 +84,7 @@
 
   #include "G4NeutronHPThermalBoost.hh"
   #include "G4NeutronHPManager.hh"
-  G4HadFinalState * StorkNeutronHPChannelList::ApplyYourself(const G4Element * , const G4HadProjectile & aTrack)
+  G4HadFinalState * StorkNeutronHPChannelList::ApplyYourself(const G4Element *elem , const G4HadProjectile & aTrack)
   {
     G4NeutronHPThermalBoost aThermalE;
     G4int i, ii;
@@ -109,6 +109,11 @@
 								  theChannels[ii]->GetZ(i),
 						  		  std::max(0., aTrack.GetMaterial()->GetTemperature()-fsTemp)),
 					                i);
+//            running[i] +=theChannels[ii]->GetWeightedXsec(aTrack.GetKineticEnergy(),i);
+//            if(theChannels[ii]->GetWeightedXsec(aTrack.GetKineticEnergy(),i)!=0.)
+//            {
+//                running[i] +=1.0*elem->GetRelativeAbundanceVector()[i]/perCent;
+//            }
 	}
       }
     }
@@ -137,6 +142,8 @@
 								  theChannels[i]->GetZ(isotope),
 						  		  std::max(0., aTrack.GetMaterial()->GetTemperature()-fsTemp)),
 					                isotope);
+//        running[i] += theChannels[i]->GetFSCrossSection(aTrack.GetKineticEnergy(),
+//					                isotope);
         targA=(G4int)theChannels[i]->GetN(isotope); //Will be simply used the last valid value
         targZ=(G4int)theChannels[i]->GetZ(isotope);
       }
@@ -173,6 +180,7 @@
     for(i=0; i<nChannels; i++)
     {
       lChan = i;
+//      if(running[i]>0) break;
       if(running[nChannels-1] != 0) if(random<running[i]/running[nChannels-1]) break;
     }
     delete [] running;
@@ -181,14 +189,16 @@
 //        StorkInteractStat* interactStat;
 //        interactStat->IncrementReacCount(MTRList[lChan]);
     }
-//    STORKEnergyDistScore *EnergyScore;
-//    EnergyScore->SetIso(targZ*1000+targA);
+    STORKEnergyDistScore *EnergyScore;
+    EnergyScore->SetIso(targZ*1000+targA);
 
 //    STORKIsoReacScore *isoReacScore;
 //    isoReacScore->SetIso(targZ*1000+targA);
 
 //    StorkIsoStat *isoStat;
 //    isoStat->IncIsoCount(targZ*1000+targA);
+
+//    G4cout << (targZ*1000+targA) << G4endl;
 
     return theChannels[lChan]->ApplyYourself(aTrack, isotope);
   }

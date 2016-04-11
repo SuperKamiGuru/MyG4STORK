@@ -225,11 +225,18 @@
       {
         index = theMaterial->GetElement(i)->GetIndex();
         rWeight = NumAtomsPerVolume[i];
-        //xSec[i] = theInelastic[index].GetXsec(aThermalE.GetThermalEnergy(aTrack,
         xSec[i] = (*theInelastic[index]).GetXsec(aThermalE.GetThermalEnergy(aTrack,
   		                                                         theMaterial->GetElement(i),
     								         std::max(0., theMaterial->GetTemperature()-fsTemp)));
         xSec[i] *= rWeight;
+//        if((*theInelastic[index]).GetXsec(aTrack.GetKineticEnergy())!=0.)
+//        {
+//            xSec[i] = rWeight;
+//        }
+//        else
+//        {
+//            xSec[i] = 0;
+//        }
         sum+=xSec[i];
       }
       G4double random = G4UniformRand();

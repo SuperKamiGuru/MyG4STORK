@@ -202,8 +202,8 @@
     G4ReactionProduct theTarget;
     G4Nucleus aNucleus;
     G4ThreeVector neuVelo = (1./incidentParticle->GetDefinition()->GetPDGMass())*theNeutron.GetMomentum();
-//    theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, theTrack.GetMaterial()->GetTemperature());
-    theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, 0.);
+    theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, theTrack.GetMaterial()->GetTemperature());
+//    theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, 0.);
 //     G4cout << "Nucleus-test"<<" "<<targetMass<<" ";
 //     G4cout << theTarget.GetMomentum().x()<<" ";
 //     G4cout << theTarget.GetMomentum().y()<<" ";
@@ -362,8 +362,8 @@ G4cout << "after " <<  ( n4p.e() - n4p.m() ) / eV<< G4endl;
     // now all in Lab
 // nun den recoil generieren...und energy change, momentum change angeben.
 
-    G4double randE = G4UniformRand()*1.0+1.0E-11;
-    theNeutron.SetKineticEnergy(randE);
+//    G4double randE = G4UniformRand()*1.0*MeV+1.0E-5*eV;
+//    theNeutron.SetKineticEnergy(randE);
 
 //    theNeutron.SetKineticEnergy(2.0);
 

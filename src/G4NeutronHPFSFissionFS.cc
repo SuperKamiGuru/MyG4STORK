@@ -40,6 +40,7 @@
 #include "G4LorentzVector.hh"
 #include "G4NeutronHPDataUsed.hh"
 
+
   void G4NeutronHPFSFissionFS::Init (G4double A, G4double Z, G4int M, G4String & dirName, G4String & )
   {
     G4String tString = "/FS/";
@@ -102,7 +103,6 @@
     //theData.close();
   }
 
-
   G4DynamicParticleVector * G4NeutronHPFSFissionFS::ApplyYourself(G4int nPrompt,
                                                  G4int nDelayed, G4double * theDecayConst)
   {
@@ -148,6 +148,7 @@
       dp->SetMomentum(theNeutrons[i].GetMomentum());
       aResult->push_back(dp);
    }
+
    delete [] theNeutrons;
 // return the result
    return aResult;
@@ -183,9 +184,8 @@ void G4NeutronHPFSFissionFS::SampleNeutronMult(G4int&all, G4int&Prompt, G4int&de
 //     delayed = G4Poisson(delayedNeutronMulti);
      if(hasDelayedInfo)
      {
-        Prompt = floor(promptNeutronMulti+delayedNeutronMulti+G4UniformRand());
-//        delayed = floor(delayedNeutronMulti+G4UniformRand());
-        delayed=0;
+        Prompt = floor(promptNeutronMulti+G4UniformRand());
+        delayed = floor(delayedNeutronMulti+G4UniformRand());
         all = Prompt+delayed;
      }
      else

@@ -96,7 +96,7 @@ void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
         {
             if(!TOPC_is_master())
             {
-//                EnergyScore->ResetScoreTable();
+                EnergyScore->ResetScoreTable();
 //                isoReacScore->ResetScoreTable();
             }
             while(runIDCounter < numRuns)
@@ -140,7 +140,7 @@ void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
                     if(saveFissionData) SaveFissionDistribution(fissionFile);
                 }
 
-                if(!TOPC_is_master())
+                if(TOPC_rank()==1)
                 {
 //                    intrctStat.PrintReacCount();
 //                        isoStat->PrintIsoCount();
@@ -149,7 +149,7 @@ void StorkParallelRunManager::BeamOn(G4int n_event, const char* macroFile,
 
             if(!TOPC_is_master())
             {
-//                EnergyScore->PrintData();
+                EnergyScore->PrintData();
 //                isoReacScore->PrintData();
             }
 

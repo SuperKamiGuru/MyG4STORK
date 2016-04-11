@@ -7,6 +7,7 @@ int STORKEnergyDistScore::numIso;
 int STORKEnergyDistScore::procRank;
 int STORKEnergyDistScore::isoName;
 int* STORKEnergyDistScore::isoNameList;
+int* STORKEnergyDistScore::isoUseList;
 
 STORKEnergyDistScore::STORKEnergyDistScore(int rankID)
 {

@@ -206,8 +206,8 @@ void G4NeutronHPInelasticBaseFS::BaseApply(const G4HadProjectile & theTrack,
   G4Nucleus aNucleus;
   G4ReactionProduct theTarget;
   G4ThreeVector neuVelo = (1./incidentParticle->GetDefinition()->GetPDGMass())*theNeutron.GetMomentum();
-  theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, 0.);
-//  theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, theTrack.GetMaterial()->GetTemperature());
+//  theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, 0.);
+  theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, theTrack.GetMaterial()->GetTemperature());
 
 // prepare energy in target rest frame
   G4ReactionProduct boosted;

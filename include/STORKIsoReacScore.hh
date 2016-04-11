@@ -140,13 +140,16 @@ class STORKIsoReacScore
 
             for(int k=0; k<numIso; k++)
             {
-                stream << fileName << isoNameList[k] << "Slave" << procRank << ".txt";
+                system(("mkdir -p -m=666 "+fileName).c_str());
+                stream << fileName << "IsoReac" << isoNameList[k] << "Slave" << procRank << ".txt";
                 tempFileName = stream.str();
-                ofstream isoReacFile (tempFileName.c_str(),std::ofstream::out);
+                stream.str("");
+                stream.clear();
+                ofstream isoReacFile (tempFileName.c_str(),std::ofstream::out | std::ios::trunc );
 
                 if (!isoReacFile)
                 {
-                    cout << "Failed to open file" << endl;
+                    cout << "Failed to open file" << tempFileName << endl;
                     return;
                 }
 
@@ -154,7 +157,7 @@ class STORKIsoReacScore
                 isoReacFile.precision(6);
 
                 isoReacFile << "MCNP Energy Dist Samples" << endl;
-                isoReacFile << 261 << '\n' << endl;
+                isoReacFile << 261 << '\n' << 4 << '\n' << endl;
                 for(int i=0; i<261; i++)
                 {
                     isoReacFile << std::setw(14) << binBounds[i];
@@ -168,9 +171,8 @@ class STORKIsoReacScore
                     for(int j=0; j<4; j++)
                     {
                         isoReacFile << std::setw(14) << outNeutData[k][i][j];
-                        if((j==4))
-                            isoReacFile << endl;
                     }
+                    isoReacFile << endl;
                 }
                 isoReacFile << endl;
 

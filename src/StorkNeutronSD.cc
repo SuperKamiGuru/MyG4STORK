@@ -95,6 +95,8 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 	// Get the track for the current particle
     G4Track *aTrack = aStep->GetTrack();
 
+//    G4cout << aTrack->GetMaterial()->GetName() << G4endl;
+
     // Particle type involved in hit
     G4ParticleDefinition* hitDefinition = aTrack->GetDefinition();
 
@@ -211,6 +213,7 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 	}
 
     StorkInteractStat intrctStat;
+//    G4cout << hitProcess << G4endl;
 
 	// Record the site of the fission and the lifetime of the incident neutron.
 	// Also update the neutron production and loss totals, and save any delayed
@@ -224,13 +227,13 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
         // Record number of daughter neutrons
         for( ; itr != trackVector->end(); itr++)
         {
-            (*itr)->SetKineticEnergy(2);
-//            EnergyScore->ScoreParticle(preStepPoint->GetKineticEnergy(), aTrack->GetKineticEnergy());
+//            (*itr)->SetKineticEnergy(2);
             if((*itr)->GetTrackStatus()!=fKillTrackAndSecondaries)
             {
                 // Check if secondary is a neutron
                 if((*itr)->GetDefinition() == G4Neutron::NeutronDefinition())
                 {
+//                    EnergyScore->ScoreParticle(preStepPoint->GetKineticEnergy(), (*itr)->GetKineticEnergy());
                     // Check if the neutron is a delayed neutron
                     if((*itr)->GetGlobalTime() > hitTime)
                     {
@@ -335,12 +338,13 @@ G4bool StorkNeutronSD::ProcessHits(G4Step *aStep, G4TouchableHistory*)
 
 		for( ; itr != trackVector->end(); itr++)
 		{
-            (*itr)->SetKineticEnergy(2);
+//            (*itr)->SetKineticEnergy(2);
             if((*itr)->GetTrackStatus()!=fKillTrackAndSecondaries)
             {
                 // Set the neutrons lifetime to that of the current neutron
                 if((*itr)->GetDefinition() == G4Neutron::NeutronDefinition())
                 {
+//                    EnergyScore->ScoreParticle(preStepPoint->GetKineticEnergy(), (*itr)->GetKineticEnergy());
                     if(nMulti)
                     {
                         nProd++;

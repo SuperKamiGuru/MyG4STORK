@@ -42,9 +42,11 @@ class STORKEnergyDistScore
             numIso=isoNameVec.size();
 
             isoNameList = new int[numIso];
+            isoUseList = new int [numIso];
             for(int i=0; i<numIso; i++)
             {
                 isoNameList[i] = isoNameVec[i];
+                isoUseList[i] = 0;
             }
 
             outNeutData = new int** [numIso];
@@ -83,7 +85,10 @@ class STORKEnergyDistScore
                 delete [] outNeutData;
             if(isoNameList)
                 delete [] isoNameList;
+            if(isoUseList)
+                delete [] isoUseList;
         }
+
         static void ResetScoreTable()
         {
             for(int k=0; k<numIso; k++)
@@ -115,6 +120,8 @@ class STORKEnergyDistScore
             {
                 cout << "isotope not found" << endl;
             }
+
+            isoUseList[isotope]=1;
 
             int enerIndx=0;
             if(EnerIn<1.0E-14)
@@ -152,42 +159,48 @@ class STORKEnergyDistScore
 
             for(int k=0; k<numIso; k++)
             {
-                stream << fileName << isoNameList[k] << "Slave" << procRank << ".txt";
-                tempFileName = stream.str();
-                ofstream enerDistFile (tempFileName.c_str(),std::ofstream::out);
-
-                if (!enerDistFile)
+                if(isoUseList[k]!=0)
                 {
-                    cout << "Failed to open file" << endl;
-                    return;
-                }
+                    stream << fileName << isoNameList[k] << "Slave" << procRank << ".txt";
+                    tempFileName = stream.str();
+                    stream.str("");
+                    stream.clear();
+                    ofstream enerDistFile (tempFileName.c_str(),std::ofstream::out);
 
-                enerDistFile.fill(' ');
-                enerDistFile.precision(6);
-
-                enerDistFile << "MCNP Energy Dist Samples" << endl;
-                enerDistFile << 261 << endl;
-                enerDistFile << 261 << '\n' << endl;
-                for(int i=0; i<261; i++)
-                {
-                    enerDistFile << std::setw(14) << binBounds[i];
-                    if(((i+1)%6==0)||(i==260))
-                        enerDistFile << endl;
-                }
-                enerDistFile << endl;
-
-                for(int i=0; i<261; i++)
-                {
-                    for(int j=0; j<261; j++)
+                    if (!enerDistFile)
                     {
-                        enerDistFile << std::setw(14) << outNeutData[k][i][j];
-                        if(((j+1)%6==0)||(j==260))
+                        cout << "Failed to open file" << endl;
+                        return;
+                    }
+
+                    enerDistFile.fill(' ');
+                    enerDistFile.precision(6);
+
+                    enerDistFile << "MCNP Energy Dist Samples" << endl;
+                    enerDistFile << 261 << endl;
+                    enerDistFile << 261 << '\n' << endl;
+                    for(int i=0; i<261; i++)
+                    {
+                        enerDistFile << std::setw(14) << binBounds[i];
+                        if(((i+1)%6==0)||(i==260))
                             enerDistFile << endl;
                     }
-                }
-                enerDistFile << endl;
+                    enerDistFile << endl;
 
-                enerDistFile.close();
+                    for(int i=0; i<261; i++)
+                    {
+                        for(int j=0; j<261; j++)
+                        {
+                            enerDistFile << std::setw(14) << outNeutData[k][i][j];
+                            if(((j+1)%6==0)||(j==260))
+                                enerDistFile << endl;
+                        }
+                    }
+                    enerDistFile << endl;
+
+                    enerDistFile.close();
+                    enerDistFile.clear();
+                }
             }
         }
 
@@ -196,6 +209,7 @@ class STORKEnergyDistScore
         static string fileName;
         static int numIso, procRank,isoName;
         static int *isoNameList;
+        static int *isoUseList;
 
 
     protected:

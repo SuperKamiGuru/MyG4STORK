@@ -448,6 +448,50 @@
     return result;
   }
 
+//  G4double G4NeutronHPVector::Sample() // Samples X according to distribution Y
+//  {
+//    G4double result;
+//    G4int j;
+//
+//    if(GetVectorLength()==1)
+//    {
+//      result = theData[0].GetX();
+//    }
+//    else
+//    {
+//      if(theIntegral==0) { IntegrateAndNormalise(); }
+//    G4double rand;
+//    G4double value, test;
+//       rand = G4UniformRand();
+//       G4int ibin = -1;
+//       for ( G4int i = 0 ; i < GetVectorLength() ; i++ )
+//       {
+//          if ( rand < theIntegral[i] )
+//          {
+//             ibin = i;
+//          }
+//       }
+//       if ( ibin < 0 ) G4cout << "TKDB 080807 " << rand << G4endl;
+//       // result
+//       rand = G4UniformRand();
+//       G4double x1, x2;
+//       if ( ibin == 0 )
+//       {
+//          x1 = theData[ ibin ].GetX();
+//          value = x1;
+//       }
+//       else
+//       {
+//          x1 = theData[ ibin-1 ].GetX();
+//       }
+//
+//       x2 = theData[ ibin ].GetX();
+//       result = rand * ( x2 - x1 ) + x1;
+//
+//       }
+//    return result;
+//  }
+
   G4double G4NeutronHPVector::Get15percentBorder()
   {
     if(the15percentBorderCash>-DBL_MAX/2.) return the15percentBorderCash;

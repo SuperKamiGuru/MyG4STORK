@@ -230,12 +230,13 @@ GetCrossSection(const G4DynamicParticle* aP, const G4Element* elem, G4double /*a
 {
     StorkElement *anE = dynamic_cast <StorkElement*> (const_cast<G4Element*>(elem));
 
-    if(reactionType == 'F' && anE->GetZ() < 90) return 0;
+    if(reactionType == 'F' && elem->GetZ() < 90) return 0;
 
-    G4bool outOfRange;
-    G4int index = anE->GetIndex();
+    G4bool outOfRange=false;
+    G4int index = elem->GetIndex();
 
     // prepare neutron
+
     G4double eKinetic = aP->GetKineticEnergy();
     G4ReactionProduct theNeutron( aP->GetDefinition() );
     theNeutron.SetMomentum( aP->GetMomentum() );
@@ -247,19 +248,71 @@ GetCrossSection(const G4DynamicParticle* aP, const G4Element* elem, G4double /*a
     G4Nucleus aNuc;
     G4double xSection;
     G4double eps = 0.0001;
-    G4double theA = anE->GetN();
-    G4double theZ = anE->GetZ();
+    G4double theA = elem->GetN();
+    G4double theZ = elem->GetZ();
     G4double eleMass;
+    G4double csDataTemp=0;
+    G4double elemTemp=0;
+    if(anE)
+    {
+        csDataTemp = anE->GetCSDataTemp();
+        elemTemp = anE->GetTemperature();
+    }
+
+//    xSection = (*((*theCrossSections)(index))).GetValue(eKinetic, outOfRange);
+//    if(reactionType == 'E')
+//    {
+//        if(xSection!=0.)
+//        {
+//            return 0.5E-16;
+//        }
+//        else
+//        {
+//            return 0.0;
+//        }
+//    }
+//    else if(reactionType == 'C')
+//    {
+//        if(xSection!=0.)
+//        {
+//            return 0.5-16;
+//        }
+//        else
+//        {
+//            return 0.0;
+//        }
+//    }
+//    else if(reactionType == 'F')
+//    {
+//        if(xSection!=0.)
+//        {
+//            return 0.5E-16;
+//        }
+//        else
+//        {
+//            return 0.0;
+//        }
+//    }
+//    else
+//    {
+//        if(xSection!=0.)
+//        {
+//            return 0.5E-16;
+//        }
+//        else
+//        {
+//            return 0.0;
+//        }
+//    }
 
     eleMass = (G4NucleiProperties::GetNuclearMass(static_cast<G4int>(theA+eps),
 			static_cast<G4int>(theZ+eps))) / G4Neutron::Neutron()->GetPDGMass();
 
-    if(anE->GetCSDataTemp()==-1)
-        return 0.;
+
 
 	// Find the temperature difference between the temperature the cross
 	// section was evaluated at versus the temperature of the material
-	G4double tempDiff = anE->GetTemperature() - anE->GetCSDataTemp();
+	G4double tempDiff = elemTemp - csDataTemp;
 
 	// If there is no temperature difference, return the cross section directly
 	if(std::abs(tempDiff) <= 0.1)

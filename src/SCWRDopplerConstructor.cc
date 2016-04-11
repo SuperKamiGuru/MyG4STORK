@@ -89,41 +89,53 @@ SCWRDopplerConstructor::SCWRDopplerConstructor()
 
     // update temperature and density data at h=1.75cm
     moderatorTemp=300.00*kelvin;
+//    moderatorTemp=293.606*kelvin;
     moderatorDensity=1.0851*g/cm3;
 
     pressTubeTemp=414.12*kelvin;
+//    pressTubeTemp=293.606*kelvin;
     pressTubeDensity=6.52*g/cm3;
 
     outLinerTemp=414.12*kelvin;
+//    outLinerTemp=293.606*kelvin;
     outLinerDensity=6.52*g/cm3;
 
     insulatorTemp=549.11*kelvin;
+//    insulatorTemp=293.606*kelvin;
     insulatorDensity=5.83*g/cm3;
 
     linerTemp=658.95*kelvin;
+//    linerTemp=293.606*kelvin;
     linerDensity=7.9*g/cm3;
 
     coolantTemp=666.64*kelvin;
-    //coolantDensity=0.21395*g/cm3;
+//    coolantTemp=293.606*kelvin;
+//    coolantDensity=0.21395*g/cm3;
     coolantDensity=0.001*g/cm3;
 
     inSheatheTemp=706.93*kelvin;
+//    inSheatheTemp=293.606*kelvin;
     inSheatheDensity=7.9*g/cm3;
 
     outSheatheTemp=706.93*kelvin;
+//    outSheatheTemp=293.606*kelvin;
     outSheatheDensity=7.9*g/cm3;
 
     innerFuelTemp=1410.09*kelvin;
+//    innerFuelTemp=293.606*kelvin;
     innerFuelDensity=9.91*g/cm3;
 
     outerFuelTemp=1410.09*kelvin;
+//    outerFuelTemp=293.606*kelvin;
     outerFuelDensity=9.87*g/cm3;
 
     flowTubeTemp=651.32*kelvin;
+//    flowTubeTemp=293.606*kelvin;
     flowTubeDensity=7.9*g/cm3;
 
     centralCoolantTemp=635.32*kelvin;
-    //centralCoolantDensity=0.58374*g/cm3;
+//    centralCoolantTemp=293.606*kelvin;
+//    centralCoolantDensity=0.58374*g/cm3;
     centralCoolantDensity=0.001*g/cm3;
 }
 
@@ -1083,6 +1095,9 @@ void SCWRDopplerConstructor::ConstructMaterials()
     PuIn->AddIsotope(Pu241, 0.1514884);
     PuIn->AddIsotope(Pu242, 0.07032604);
 
+//    PuIn = new StorkElement("PlutoniumIn", "PuIn", 1);
+//    PuIn->AddIsotope(Pu239, 1.0);
+
     PuOut = new StorkElement("PlutoniumOut", "PuOut", 5);
     PuOut->AddIsotope(Pu238, 0.02762272);
     PuOut->AddIsotope(Pu239, 0.5223647);
@@ -1207,6 +1222,20 @@ void SCWRDopplerConstructor::ConstructMaterials()
     matMap["InnerFuel"] = InnerFuel;
     matMap["FlowTube"] = FlowTube;
     matMap["CentralCoolant"] = CentralCoolant;
+
+//    matMap["Galactic"] = InnerFuel;
+//    matMap["Moderator"] = InnerFuel;
+//    matMap["PressTube"] = InnerFuel;
+//    matMap["OutLiner"] = InnerFuel;
+//    matMap["Insulator"] = InnerFuel;
+//    matMap["Liner"] = InnerFuel;
+//    matMap["Coolant"] = InnerFuel;
+//    matMap["OutSheathe"] = InnerFuel;
+//    matMap["InSheathe"] = InnerFuel;
+//    matMap["OuterFuel"] = InnerFuel;
+//    matMap["InnerFuel"] = InnerFuel;
+//    matMap["FlowTube"] = InnerFuel;
+//    matMap["CentralCoolant"] = InnerFuel;
 
 /*
     G4ElementVector *elemVec;

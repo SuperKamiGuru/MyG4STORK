@@ -60,6 +60,7 @@
        produceFissionFragments = true;
     }
  }
+
  G4HadFinalState * G4NeutronHPFissionFS::ApplyYourself(const G4HadProjectile & theTrack)
  {
  //G4cout << "G4NeutronHPFissionFS::ApplyYourself " << G4endl;
@@ -76,8 +77,8 @@
    G4ReactionProduct theTarget;
    G4double targetMass = theFS.GetMass();
    G4ThreeVector neuVelo = (1./incidentParticle->GetDefinition()->GetPDGMass())*theNeutron.GetMomentum();
-   theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, 0.);
-//   theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, theTrack.GetMaterial()->GetTemperature());
+//   theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, 0.);
+   theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, theTrack.GetMaterial()->GetTemperature());
 
 // set neutron and target in the FS classes
   theFS.SetNeutron(theNeutron);
@@ -130,6 +131,7 @@
      {
        it =i;
        if(random<xSec[i]/xSec[3]) break;
+//       if(xSec[i]>0) break;
      }
    }
 
@@ -222,8 +224,6 @@
    else
    {
 //    cout << " all = "<<all<<G4endl;
-     StorkInteractStat* interactStat;
-     interactStat->IncrementReacCount(18);
      theDecayConstants = new G4double[delayed];
      theFS.SampleNeutronMult(all, Prompt, delayed, eKinetic, 0);
      if(Prompt==0&&delayed==0) Prompt=all;

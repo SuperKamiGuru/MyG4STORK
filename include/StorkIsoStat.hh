@@ -97,10 +97,17 @@ class StorkIsoStat
         }
         static void PrintIsoCount()
         {
+            int sumIso=0;
             cout << "isoNameList" << endl;
+
             for(int i=0; i<numIso; i++)
             {
-                cout << setw(14) << double(outNeutData[i])/30000 << endl;
+                sumIso += outNeutData[i];
+            }
+            for(int i=0; i<numIso; i++)
+            {
+                if(outNeutData[i]!=0)
+                    cout << setw(14) << isoNameList[i] <<  setw(14) << double(outNeutData[i])/sumIso << endl;
             }
         }
 

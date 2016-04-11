@@ -93,6 +93,10 @@
          theStableOnes.GetNumberOfIsotopes(Z);
     niso = count;
 
+    if(abun)
+        delete [] abun;
+    abun = new G4double[niso];
+
     if(theIsotopeWiseData)
         delete [] theIsotopeWiseData;
     theIsotopeWiseData = new G4NeutronHPIsoData [niso];
@@ -151,6 +155,7 @@
   //void StorkNeutronHPChannel::UpdateData(G4int A, G4int Z, G4int index, G4double abundance)
   void StorkNeutronHPChannel::UpdateData(G4int A, G4int Z, G4int M, G4int index, G4double abundance)
   {
+    abun[index]=abundance;
     // Initialze the G4FissionFragment generator for this isomer if needed
 	if(wendtFissionGenerator)
 	{
@@ -172,6 +177,7 @@
     {
       G4String tString = "/CrossSection";
       //active[index] = theIsotopeWiseData[index].Init(A, Z, abundance, theDir, tString);
+      active[index] = theIsotopeWiseData[index].Init(A, Z, M, abundance, theDir, tString);
       active[index] = theIsotopeWiseData[index].Init(A, Z, M, abundance, theDir, tString);
       if(active[index]) theBuffer = theIsotopeWiseData[index].MakeChannelData();
     }
@@ -222,7 +228,6 @@
   }
 
 #include "G4NeutronHPThermalBoost.hh"
-
   G4HadFinalState * StorkNeutronHPChannel::
   ApplyYourself(const G4HadProjectile & theTrack, G4int anIsotope)
   {
@@ -248,6 +253,16 @@
 		                                                           theFinalStates[i]->GetN(),
 									   theFinalStates[i]->GetZ(),
 						  		           std::max(0., theTrack.GetMaterial()->GetTemperature()-fsTemp)));
+//        xsec[i] = theIsotopeWiseData[i].GetXsec(theTrack.GetKineticEnergy());
+//        if(theIsotopeWiseData[i].GetXsec(theTrack.GetKineticEnergy())!=0.)
+//        {
+//            xsec[i] = 1.0*abun[i];
+//        }
+//        else
+//        {
+//            xsec[i] = 0.;
+//        }
+
         sum += xsec[i];
       }
       else
@@ -288,8 +303,8 @@
     const G4int Z = (G4int)this->GetZ(it);
     const G4int M = (G4int)this->GetM(it);
 
-//    STORKEnergyDistScore *EnergyScore;
-//    EnergyScore->SetIso(Z*1000+A);
+    STORKEnergyDistScore *EnergyScore;
+    EnergyScore->SetIso(Z*1000+A);
 
 //    STORKIsoReacScore *isoReacScore;
 //    isoReacScore->SetIso(Z*1000+A);
@@ -297,6 +312,9 @@
 //    StorkIsoStat *isoStat;
 //    isoStat->IncIsoCount(Z*1000+A);
 
+//    G4cout << Z*1000+A << G4endl;
+
+//    G4double kineticEnergy=theTrack.GetKineticEnergy();
                                        //-2:Marker for Fission
     if(wendtFissionGenerator&&anIsotope==-2)
     {
@@ -310,8 +328,13 @@
        {
 //	      G4cout << "TESTHP 24 it="<<it<<G4endl;
           theFinalState = theFinalStates[it]->ApplyYourself(theTrack);
+
        }
     }
+//    for (G4int i = 0; i < theFinalState->GetNumberOfSecondaries(); ++i)
+//  {
+//    EnergyScore->ScoreParticle(kineticEnergy, theFinalState->GetSecondary(i)->GetParticle()->GetKineticEnergy());
+//  }
 
     //G4cout <<"THE IMPORTANT RETURN"<<G4endl;
     //G4cout << "TK StorkNeutronHPChannel Elastic, Capture and Fission Cases "

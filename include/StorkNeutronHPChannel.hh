@@ -68,10 +68,13 @@ public:
     active = 0;
     registerCount = -1;
     fsTemp = finalStateTemp;
+    abun = 0;
   }
 
   ~StorkNeutronHPChannel()
   {
+    if(abun)
+        delete [] abun;
     delete theChannelData;
     // Following statement disabled to avoid SEGV
     // theBuffer is also deleted as "theChannelData" in
@@ -161,6 +164,7 @@ private:
   G4String theFSType;
   G4Element * theElement;
   G4double fsTemp;
+  G4double *abun;
 
   G4int registerCount;
 
