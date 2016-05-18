@@ -33,11 +33,12 @@
 #include "G4HadFinalState.hh"
 #include "G4NeutronHPFinalState.hh"
 #include "G4NeutronHPAngular.hh"
-#include "./G4NeutronHPEnergyDistribution.hh"
-#include "G4NeutronHPEnAngCorrelation.hh"
+#include "./STORKNeutronHPEnergyDistribution.hh"
+#include "./STORKNeutronHPEnAngCorrelation.hh"
 #include "G4NeutronHPPhotonDist.hh"
 #include "G4NeutronHPDeExGammas.hh"
 #include "./StorkInteractStat.hh"
+#include "ElementNames.hh"
 
 class G4NeutronHPInelasticCompFS : public G4NeutronHPFinalState
 {
@@ -102,9 +103,9 @@ class G4NeutronHPInelasticCompFS : public G4NeutronHPFinalState
   protected:
 
   G4NeutronHPVector * theXsection[51];
-  G4NeutronHPEnergyDistribution * theEnergyDistribution[51];
+  STORKNeutronHPEnergyDistribution * theEnergyDistribution[51];
   G4NeutronHPAngular * theAngularDistribution[51];
-  G4NeutronHPEnAngCorrelation * theEnergyAngData[51];
+  STORKNeutronHPEnAngCorrelation * theEnergyAngData[51];
 
   G4NeutronHPPhotonDist * theFinalStatePhotons[51];
 

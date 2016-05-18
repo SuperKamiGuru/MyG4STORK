@@ -43,7 +43,7 @@
 // 101111 add safty for _nat_ data case in Binary reaction, but break conservation
 // 110430 add Reaction Q value and break up flag (MF3::QI and LR)
 //
-#include "G4NeutronHPInelasticCompFS.hh"
+#include "../include/G4NeutronHPInelasticCompFS.hh"
 #include "G4NeutronHPManager.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -54,7 +54,6 @@
 #include "G4Electron.hh"
 #include "G4NeutronHPDataUsed.hh"
 #include "G4IonTable.hh"
-#include "StorkInteractStat.hh"
 
 void G4NeutronHPInelasticCompFS::InitGammas(G4double AR, G4double ZR)
 {
@@ -85,28 +84,63 @@ void G4NeutronHPInelasticCompFS::Init (G4double A, G4double Z, G4int M, G4String
   G4String tBase = getenv("G4NEUTRONHPDATA");
   gammaPath = tBase+gammaPath;
   G4String tString = dirName;
-  G4bool dbool;
-  G4NeutronHPDataUsed aFile = theNames.GetName(static_cast<G4int>(A), static_cast<G4int>(Z), M, tString, aFSType, dbool);
-  G4String filename = aFile.GetName();
-  SetAZMs( A, Z, M, aFile );
-  //theBaseA = aFile.GetA();
-  //theBaseZ = aFile.GetZ();
-  //theNDLDataA = (int)aFile.GetA();
-  //theNDLDataZ = aFile.GetZ();
-  //if(!dbool || ( Z<2.5 && ( std::abs(theBaseZ - Z)>0.0001 || std::abs(theBaseA - A)>0.0001)))
-  if ( !dbool || ( Z<2.5 && ( std::abs(theNDLDataZ - Z)>0.0001 || std::abs(theNDLDataA - A)>0.0001)) )
-  {
-    if(getenv("NeutronHPNamesLogging")) G4cout << "Skipped = "<< filename <<" "<<A<<" "<<Z<<G4endl;
-    hasAnyData = false;
-    hasFSData = false;
-    hasXsec = false;
-    return;
-  }
-  //theBaseA = A;
-  //theBaseZ = G4int(Z+.5);
-   //std::ifstream theData(filename, std::ios::in);
+//  G4bool dbool;
+//  G4NeutronHPDataUsed aFile = theNames.GetName(static_cast<G4int>(A), static_cast<G4int>(Z), M, tString, aFSType, dbool);
+//  G4String filename = aFile.GetName();
+//  SetAZMs( A, Z, M, aFile );
+//  //theBaseA = aFile.GetA();
+//  //theBaseZ = aFile.GetZ();
+//  //theNDLDataA = (int)aFile.GetA();
+//  //theNDLDataZ = aFile.GetZ();
+//  //if(!dbool || ( Z<2.5 && ( std::abs(theBaseZ - Z)>0.0001 || std::abs(theBaseA - A)>0.0001)))
+//  if ( !dbool || ( Z<2.5 && ( std::abs(theNDLDataZ - Z)>0.0001 || std::abs(theNDLDataA - A)>0.0001)) )
+//  {
+//    if(getenv("NeutronHPNamesLogging")) G4cout << "Skipped = "<< filename <<" "<<A<<" "<<Z<<G4endl;
+//    hasAnyData = false;
+//    hasFSData = false;
+//    hasXsec = false;
+//    return;
+//  }
+
+    ElementNames *elemName;
+    theBaseA = A;
+    theBaseZ = Z;
+    theBaseM = M;
+    theNDLDataA = A;
+    theNDLDataZ = Z;
+    theNDLDataZ = M;
+
+    std::stringstream stream;
+
+    if(A==0)
+        stream << dirName << "/" << aFSType << Z << "_nat_" << elemName->GetName(static_cast<G4int>(Z));
+    else
+        stream << dirName << "/" << aFSType << Z << "_" << A << "_" << elemName->GetName(static_cast<G4int>(Z));
+
+    G4String filename = stream.str();
+
    std::istringstream theData(std::ios::in);
    G4NeutronHPManager::GetInstance()->GetDataStream(filename,theData);
+   if ( !theData.good() )
+   {
+    theData.clear();
+    stream.clear();
+    stream.str("");
+    stream << dirName << "/" << aFSType << Z << "_nat_" << elemName->GetName(static_cast<G4int>(Z));
+//    G4cout << "Couldn't open " << filename << endl;
+    filename = stream.str();
+//    G4cout << "Attempting to use " << filename << " instead" << G4endl;
+    G4NeutronHPManager::GetInstance()->GetDataStream(filename,theData);
+
+    if ( !theData.good() )
+    {
+//        G4cout << "Skipped = "<< filename <<" "<<A<<" "<<Z<< '\n' << G4endl;
+        hasAnyData = false;
+        hasFSData = false;
+        hasXsec = false;
+        return;
+    }
+   }
   if(!theData) //"!" is a operator of ios
   {
     hasAnyData = false;
@@ -125,10 +159,7 @@ void G4NeutronHPInelasticCompFS::Init (G4double A, G4double Z, G4int M, G4String
     theData >> dataType;
     theData >> sfType >> dummy;
     it = 50;
-    if(sfType>=600||(sfType<100&&sfType>=50))
-    {
-     it = sfType%50;
-    }
+    if(sfType>=600||(sfType<100&&sfType>=50)) it = sfType%50;
     if(dataType==3)
     {
       //theData >> dummy >> dummy;
@@ -153,12 +184,12 @@ void G4NeutronHPInelasticCompFS::Init (G4double A, G4double Z, G4int M, G4String
     }
     else if(dataType==5)
     {
-      theEnergyDistribution[it] = new G4NeutronHPEnergyDistribution;
+      theEnergyDistribution[it] = new STORKNeutronHPEnergyDistribution;
       theEnergyDistribution[it]->Init(theData);
     }
     else if(dataType==6)
     {
-      theEnergyAngData[it] = new G4NeutronHPEnAngCorrelation;
+      theEnergyAngData[it] = new STORKNeutronHPEnAngCorrelation;
       theEnergyAngData[it]->Init(theData);
     }
     else if(dataType==12)
@@ -249,7 +280,6 @@ void G4NeutronHPInelasticCompFS::CompositeApply(const G4HadProjectile & theTrack
     G4Nucleus aNucleus;
     G4ReactionProduct theTarget;
     G4ThreeVector neuVelo = (1./incidentParticle->GetDefinition()->GetPDGMass())*theNeutron.GetMomentum();
-//    theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, 0.);
     theTarget = aNucleus.GetBiasedThermalNucleus( targetMass, neuVelo, theTrack.GetMaterial()->GetTemperature());
 
 // prepare the residual mass
@@ -267,12 +297,6 @@ void G4NeutronHPInelasticCompFS::CompositeApply(const G4HadProjectile & theTrack
 
 // select exit channel for composite FS class.
     G4int it = SelectExitChannel( eKinetic );
-
-//    StorkInteractStat* interactStat;
-//    if(it<50)
-//        interactStat->IncrementReacCount(50+it);
-
-
 
 // set target and neutron in the relevant exit channel
     InitDistributionInitialState(theNeutron, theTarget, it);
@@ -336,9 +360,9 @@ void G4NeutronHPInelasticCompFS::CompositeApply(const G4HadProjectile & theTrack
         if ( QI[it] < 0 || 849 < QI[it] ) dqi = QI[it]; //For backword compatibility QI introduced since G4NDL3.15
 	G4double MaxEne=eKinetic+dqi;
 	G4double eSecN;
-	do{
+//	do{
 	  eSecN=theEnergyDistribution[it]->Sample(eKinetic, dummy);
-	}while(eSecN>MaxEne);
+//	}while(eSecN>MaxEne);
 	aHadron.SetKineticEnergy(eSecN);
 	//************************************************************
         eGamm = eKinetic-eSecN;
@@ -712,11 +736,11 @@ void G4NeutronHPInelasticCompFS::CompositeApply(const G4HadProjectile & theTrack
     }
 
 //080721
-   G4ParticleDefinition* targ_pd = G4IonTable::GetIonTable()->GetIon ( (G4int)theBaseZ , (G4int)theBaseA , 0.0 );
-   G4LorentzVector targ_4p_lab ( theTarget.GetMomentum() , std::sqrt( targ_pd->GetPDGMass()*targ_pd->GetPDGMass() + theTarget.GetMomentum().mag2() ) );
-   G4LorentzVector proj_4p_lab = theTrack.Get4Momentum();
-   G4LorentzVector init_4p_lab = proj_4p_lab + targ_4p_lab;
-   adjust_final_state ( init_4p_lab );
+//   G4ParticleDefinition* targ_pd = G4IonTable::GetIonTable()->GetIon ( (G4int)theBaseZ , (G4int)theBaseA , 0.0 );
+//   G4LorentzVector targ_4p_lab ( theTarget.GetMomentum() , std::sqrt( targ_pd->GetPDGMass()*targ_pd->GetPDGMass() + theTarget.GetMomentum().mag2() ) );
+//   G4LorentzVector proj_4p_lab = theTrack.Get4Momentum();
+//   G4LorentzVector init_4p_lab = proj_4p_lab + targ_4p_lab;
+//   adjust_final_state ( init_4p_lab );
 
 // clean up the primary neutron
     theResult.SetStatusChange(stopAndKill);

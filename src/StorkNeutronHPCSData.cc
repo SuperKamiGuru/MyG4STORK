@@ -130,9 +130,6 @@ void StorkNeutronHPCSData::BuildPhysicsTable(const G4ParticleDefinition& aP, G4S
   G4NeutronHPElasticData *Eptr = NULL;
   G4NeutronHPInelasticData *Iptr = NULL;
 
-  ElementNames elemNames;
-  elemNames.SetElementNames();
-
   // make a PhysicsVector for each element
   static const G4ElementTable *theElementTable = G4Element::GetElementTable();
   for( size_t i=0; i<numberOfElements; ++i )
@@ -161,8 +158,6 @@ void StorkNeutronHPCSData::BuildPhysicsTable(const G4ParticleDefinition& aP, G4S
 
     theCrossSections->push_back(physVec);
   }
-
-  elemNames.ClearStore();
 }
 
 

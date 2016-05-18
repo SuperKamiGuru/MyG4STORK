@@ -51,7 +51,12 @@ G4NeutronHPVector * G4NeutronHPPartial::GetY(G4double e1)
        if(X[i]>e1) break;
     }
     if(i==nData) i--;
-    if(0==i) i=1;
+    if(0==i)
+    {
+        data[0].SetLabel(X[0]);
+        aBuffer[0]=data[0];
+        return aBuffer;
+    }
     data[i-1].SetLabel(X[i-1]);
     data[i].SetLabel(X[i]);
     aBuffer->Merge(theManager.GetScheme(i),e1,data+i-1,data+i);

@@ -36,9 +36,10 @@
 #include "G4NeutronHPNeutronYield.hh"
 #include "G4NeutronHPVector.hh"
 #include "G4NeutronHPFissionERelease.hh"
-#include "./G4NeutronHPEnergyDistribution.hh"
+#include "./STORKNeutronHPEnergyDistribution.hh"
 #include "G4NeutronHPPhotonDist.hh"
 #include "G4NeutronHPAngular.hh"
+#include "ElementNames.hh"
 
 class G4NeutronHPFSFissionFS : public G4NeutronHPFinalState
 {
@@ -90,8 +91,8 @@ class G4NeutronHPFSFissionFS : public G4NeutronHPFinalState
   G4double targetMass;
 
   G4NeutronHPNeutronYield theFinalStateNeutrons;
-  G4NeutronHPEnergyDistribution thePromptNeutronEnDis;
-  G4NeutronHPEnergyDistribution theDelayedNeutronEnDis;
+  STORKNeutronHPEnergyDistribution thePromptNeutronEnDis;
+  STORKNeutronHPEnergyDistribution theDelayedNeutronEnDis;
   G4NeutronHPAngular theNeutronAngularDis;
 
   G4NeutronHPPhotonDist theFinalStatePhotons;

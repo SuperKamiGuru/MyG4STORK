@@ -33,9 +33,10 @@
 #include "G4DynamicParticleVector.hh"
 #include "G4NeutronHPFinalState.hh"
 #include "G4NeutronHPNames.hh"
-#include "G4NeutronHPVector.hh"
-#include "./G4NeutronHPEnergyDistribution.hh"
+#include "./G4NeutronHPVector.hh"
+#include "./STORKNeutronHPEnergyDistribution.hh"
 #include "G4NeutronHPAngular.hh"
+#include "ElementNames.hh"
 
 class G4NeutronHPFissionBaseFS : public G4NeutronHPFinalState
 {
@@ -78,7 +79,7 @@ class G4NeutronHPFissionBaseFS : public G4NeutronHPFinalState
   G4HadFinalState * ApplyYourself(const G4HadProjectile & ) {return 0;}
 
   G4NeutronHPVector * theXsection;
-  G4NeutronHPEnergyDistribution theEnergyDistribution;
+  STORKNeutronHPEnergyDistribution theEnergyDistribution;
   G4NeutronHPAngular theAngularDistribution;
 
   G4ReactionProduct theNeutron;

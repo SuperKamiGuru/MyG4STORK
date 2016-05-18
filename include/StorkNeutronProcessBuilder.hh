@@ -35,6 +35,7 @@ processes and models (fission, capture, elastic, inelastic, and step limiters).
 #include "G4ProcessManager.hh"
 #include "globals.hh"
 #include "G4DiffuseElastic.hh"
+#include "G4NeutronHPThermalScattering.hh"
 
 #include "StorkMaterial.hh"
 #include "G4LogicalVolumeStore.hh"

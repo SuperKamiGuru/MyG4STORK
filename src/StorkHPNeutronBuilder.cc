@@ -90,7 +90,7 @@ void StorkHPNeutronBuilder::Build(G4HadronElasticProcess *aP)
 
 
     // Set the limits of the model
-    nElasticModel->SetMinEnergy(theMin);
+    nElasticModel->SetMinEnergy(0.0*eV);
     nElasticModel->SetMaxEnergy(theMax);
 
     // Register both

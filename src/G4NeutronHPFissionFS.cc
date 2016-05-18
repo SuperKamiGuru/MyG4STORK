@@ -30,17 +30,19 @@
 // 12-Apr-06 fix in delayed neutron and photon emission without FS data by T. Koi
 // 07-Sep-11 M. Kelsey -- Follow change to G4HadFinalState interface
 
-#include "G4NeutronHPFissionFS.hh"
+#include "../include/G4NeutronHPFissionFS.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4Nucleus.hh"
 #include "G4DynamicParticleVector.hh"
 #include "G4NeutronHPFissionERelease.hh"
 #include "G4IonTable.hh"
 #include "StorkInteractStat.hh"
+#include <sstream>
 
  void G4NeutronHPFissionFS::Init (G4double A, G4double Z, G4int M, G4String & dirName, G4String & aFSType)
  {
     //G4cout << "G4NeutronHPFissionFS::Init " << A << " " << Z << " " << M << G4endl;
+    ExtractTemp(dirName,fsTemp);
     theFS.Init(A, Z, M, dirName, aFSType);
     theFC.Init(A, Z, M, dirName, aFSType);
     theSC.Init(A, Z, M, dirName, aFSType);
@@ -103,7 +105,8 @@
 ////G4cout << "Z = " << theNDLDataZ << ", A = " << theNDLDataA << ", M = " << theNDLDataM << G4endl;
 
 // boost to target rest system and decide on channel.
-   theNeutron.Lorentz(theNeutron, -1*theTarget);
+
+   theNeutron.Lorentz(theNeutron, -(std::sqrt((theTrack.GetMaterial()->GetTemperature()-fsTemp)/theTrack.GetMaterial()->GetTemperature()))*theTarget);
 
 // dice the photons
 
@@ -317,3 +320,46 @@
 
    return &theResult;
  }
+
+ bool G4NeutronHPFissionFS::ExtractTemp(G4String name, G4double &temp)
+{
+    bool check = false;
+    std::stringstream ss;
+    G4int index = name.size()-1, startPos=1, endPos=0;
+    while(index>=0)
+    {
+        if(check)
+        {
+            if(((name[index]>='0')&&(name[index]<='9'))||(name[index]=='.'))
+            {
+                startPos--;
+            }
+            else
+            {
+                break;
+            }
+        }
+        else
+        {
+            if((name[index]>='0')&&(name[index]<='9'))
+            {
+                if((index+1==int(name.size()))||!((name[index+1]=='k')||(name[index+1]=='K')))
+                {
+                    return false;
+                }
+                check = true;
+                startPos=endPos=index;
+            }
+        }
+        index--;
+    }
+
+    if(endPos>=startPos)
+    {
+        G4String temperature = name.substr(startPos, endPos-startPos+1);
+        ss.str(temperature);
+        ss >> temp;
+    }
+
+    return check;
+}

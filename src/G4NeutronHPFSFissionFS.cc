@@ -40,25 +40,60 @@
 #include "G4LorentzVector.hh"
 #include "G4NeutronHPDataUsed.hh"
 
-
   void G4NeutronHPFSFissionFS::Init (G4double A, G4double Z, G4int M, G4String & dirName, G4String & )
   {
     G4String tString = "/FS/";
-    hasDelayedInfo=false;
-    G4bool dbool;
-    G4NeutronHPDataUsed aFile = theNames.GetName(static_cast<G4int>(A), static_cast<G4int>(Z), M, dirName, tString, dbool);
-    G4String filename = aFile.GetName();
-    SetAZMs( A, Z, M, aFile );
-    if(!dbool)
-    {
-      hasAnyData = false;
-      hasFSData = false;
-      hasXsec = false;
-      return;
-    }
-   //std::ifstream theData(filename, std::ios::in);
-   std::istringstream theData(std::ios::in);
+//    G4bool dbool;
+//    G4NeutronHPDataUsed aFile = theNames.GetName(static_cast<G4int>(A), static_cast<G4int>(Z), M, dirName, tString, dbool);
+//    G4String filename = aFile.GetName();
+//    SetAZMs( A, Z, M, aFile );
+//    if(!dbool)
+//    {
+//      hasAnyData = false;
+//      hasFSData = false;
+//      hasXsec = false;
+//      return;
+//    }
+
+   ElementNames *elemName;
+    theBaseA = A;
+    theBaseZ = Z;
+    theBaseM = M;
+    theNDLDataA = A;
+    theNDLDataZ = Z;
+    theNDLDataZ = M;
+
+    std::stringstream stream;
+
+    if(A==0)
+        stream << dirName << "/FS/" << Z << "_nat_" << elemName->GetName(static_cast<G4int>(Z));
+    else
+        stream << dirName << "/FS/" << Z << "_" << A << "_" << elemName->GetName(static_cast<G4int>(Z));
+
+    G4String filename = stream.str();
+
+    std::istringstream theData(std::ios::in);
    G4NeutronHPManager::GetInstance()->GetDataStream(filename,theData);
+   if ( !theData.good() )
+   {
+    theData.clear();
+    stream.str("");
+    stream.clear();
+    stream << dirName << "/FS/" << Z << "_nat_" << elemName->GetName(static_cast<G4int>(Z));
+//    G4cout << "Couldn't open " << filename << endl;
+    filename = stream.str();
+//    G4cout << "Attempting to use " << filename << " instead" << G4endl;
+    G4NeutronHPManager::GetInstance()->GetDataStream(filename,theData);
+
+    if ( !theData.good() )
+    {
+//        G4cout << "Skipped = "<< filename <<" "<<A<<" "<<Z<< '\n' << G4endl;
+        hasAnyData = false;
+        hasFSData = false;
+        hasXsec = false;
+        return;
+    }
+   }
 
     // here it comes
     G4int infoType, dataType;
@@ -80,11 +115,7 @@
           if(dataType==1) theFinalStateNeutrons.InitMean(theData);
           break;
         case 3:
-          if(dataType==1)
-          {
-            theFinalStateNeutrons.InitDelayed(theData);
-            hasDelayedInfo=true;
-          }
+          if(dataType==1) theFinalStateNeutrons.InitDelayed(theData);
           if(dataType==5) theDelayedNeutronEnDis.Init(theData);
           break;
         case 4:
@@ -102,6 +133,7 @@
     targetMass = theFinalStateNeutrons.GetTargetMass();
     //theData.close();
   }
+
 
   G4DynamicParticleVector * G4NeutronHPFSFissionFS::ApplyYourself(G4int nPrompt,
                                                  G4int nDelayed, G4double * theDecayConst)
@@ -148,13 +180,12 @@
       dp->SetMomentum(theNeutrons[i].GetMomentum());
       aResult->push_back(dp);
    }
-
    delete [] theNeutrons;
 // return the result
    return aResult;
   }
 
-void G4NeutronHPFSFissionFS::SampleNeutronMult(G4int&all, G4int&Prompt, G4int&delayed, G4double eKinetic, G4int /*off*/)
+void G4NeutronHPFSFissionFS::SampleNeutronMult(G4int&all, G4int&Prompt, G4int&delayed, G4double eKinetic, G4int off)
 {
    G4double promptNeutronMulti = 0;
    promptNeutronMulti = theFinalStateNeutrons.GetPrompt(eKinetic);
@@ -167,33 +198,17 @@ void G4NeutronHPFSFissionFS::SampleNeutronMult(G4int&all, G4int&Prompt, G4int&de
      delayed = 0;
      G4double totalNeutronMulti = theFinalStateNeutrons.GetMean(eKinetic);
 //     all = G4Poisson(totalNeutronMulti-off);
-//     all += off;
-     if(hasDelayedInfo)
-     {
-        all = floor(totalNeutronMulti+G4UniformRand());
-     }
-     else
-     {
-        all = floor(totalNeutronMulti+G4UniformRand());
-     }
+     all = G4int(totalNeutronMulti+G4UniformRand());
+     all += off;
    }
    else
    {
 //     Prompt  = G4Poisson(promptNeutronMulti-off);
 //     Prompt += off;
 //     delayed = G4Poisson(delayedNeutronMulti);
-     if(hasDelayedInfo)
-     {
-        Prompt = floor(promptNeutronMulti+G4UniformRand());
-        delayed = floor(delayedNeutronMulti+G4UniformRand());
-        all = Prompt+delayed;
-     }
-     else
-     {
-        Prompt = floor(promptNeutronMulti+G4UniformRand());
-        delayed = 0;
-        all = Prompt+delayed;
-     }
+    Prompt = G4int(promptNeutronMulti+G4UniformRand());
+    delayed = G4int(delayedNeutronMulti+G4UniformRand());
+     all = Prompt+delayed;
    }
 }
 

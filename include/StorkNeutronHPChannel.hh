@@ -49,7 +49,7 @@
 #include "G4NeutronHPCaptureFS.hh"
 #include "G4NeutronHPFinalState.hh"
 #include "G4Element.hh"
-#include "G4WendtFissionFragmentGenerator.hh"
+#include "G4NeutronHPChannel.hh"
 #include "STORKEnergyDistScore.hh"
 #include "StorkIsoStat.hh"
 #include "STORKIsoReacScore.hh"

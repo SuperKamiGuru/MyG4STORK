@@ -47,7 +47,7 @@
 #include "StorkNeutronHPChannel.hh"
 #include "G4HadronicInteraction.hh"
 
-#include "G4NeutronHPFissionFS.hh"
+#include "./G4NeutronHPFissionFS.hh"
 
 class StorkNeutronHPFission : public G4HadronicInteraction
 {
