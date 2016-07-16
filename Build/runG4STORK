@@ -1,0 +1,68 @@
+#!/bin/bash
+
+rm -rf ./CMakeCache.txt ./CMakeFiles
+
+export AllowForHeavyElements=1
+
+if [ "$1" = "" ]; then
+	source /home/$USER/NuclearSim/geant4.10.00.p02-install/bin/geant4.sh
+	cmake -DTOPC_USE=1 -DSTORK_EXPLICIT_LOSS=0 -DG4VISUALIZE_USE=0 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11 -DGeant4_DIR=/home/$USER/NuclearSim/geant4.10.00.p02-install/lib64/Geant4-10.00.p02/Geant4Config.cmake ../
+	make clean
+	make -j4
+	echo "No Input File Given"
+	
+elif [ "$1" = "gdb" ]; then
+	source /home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/bin/geant4.sh
+	cmake -DSTORK_EXPLICIT_LOSS=0 -DTOPC_USE=0 -DG4VISUALIZE_USE=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-std=c++11 -DGeant4_DIR=/home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/lib64/Geant4-10.00.p02/Geant4Config.cmake ../
+	make clean
+	make -j4
+	gdb g4stork
+
+elif [ "$1" = "valgrind" ]; then
+	source /home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/bin/geant4.sh
+	cmake -DTOPC_USE=0 -DG4VISUALIZE_USE=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-std=c++11 -DGeant4_DIR=/home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/lib64/Geant4-10.00.p02/Geant4Config.cmake ../
+	make clean
+	make -j4
+	valgrind --leak-check=full --show-reachable=yes --error-limit=no --log-file=ValgrindOutput/g4storkValgrind.log ./g4stork $2
+
+elif [ "$1" = "single" ]; then
+	source /home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/bin/geant4.sh
+	cmake -DTOPC_USE=0 -DSTORK_EXPLICIT_LOSS=0 -DG4VISUALIZE_USE=0 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11 -DGeant4_DIR=/home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/lib64/Geant4-10.00.p02/Geant4Config.cmake ../
+	make clean
+	make -j4
+	if [ "$2" = "" ]; then
+		echo "No Input File Given"
+	else
+		./g4stork $2
+	fi
+
+elif [ "$1" = "vis" ]; then
+	if [ "$2" = "" ]; then
+		source /home/$USER/NuclearSim/geant4.10.00.p02-install/bin/geant4.sh
+		cmake -DTOPC_USE=0 -DG4VISUALIZE_USE=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-std=c++11 -DGeant4_DIR=/home/$USER/NuclearSim/geant4.10.00.p02-install/lib64/Geant4-10.00.p02/Geant4Config.cmake ../
+		make clean
+		make -j4
+		echo "No Input File Given"
+	
+	elif [ "$2" = "gdb" ]; then
+		source /home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/bin/geant4.sh
+		cmake -DTOPC_USE=0 -DG4VISUALIZE_USE=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-std=c++11 -DGeant4_DIR=/home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/lib64/Geant4-10.00.p02/Geant4Config.cmake ../
+		make clean
+		make -j4
+		gdb g4stork
+	
+	else
+		source /home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/bin/geant4.sh
+		cmake -DTOPC_USE=0 -DG4VISUALIZE_USE=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-std=c++11 -DGeant4_DIR=/home/$USER/NuclearSim/Debug/geant4.10.00.p02-install/lib64/Geant4-10.00.p02/Geant4Config.cmake ../
+		make clean
+		make -j4
+		./g4stork $2
+	fi
+
+else
+	source /home/$USER/NuclearSim/geant4.10.00.p02-install/bin/geant4.sh
+	cmake -DTOPC_USE=1 -DSTORK_EXPLICIT_LOSS=0 -DG4VISUALIZE_USE=0 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11 -DGeant4_DIR=/home/$USER/NuclearSim/geant4.10.00.p02-install/lib64/Geant4-10.00.p02/Geant4Config.cmake ../
+	make clean
+	make -j4
+	./g4stork $1
+fi

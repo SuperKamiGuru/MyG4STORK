@@ -1,4 +1,4 @@
-#include "../include/ElementNames.hh"
+#include "ElementNames.hh"
 
 string* ElementNames::elementName=NULL;
 

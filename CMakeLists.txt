@@ -33,6 +33,8 @@ add_definitions(-fpermissive)
 # Add options
 #
 
+#add options for all the new features we have added, or add to the input file options
+
 # Timing of individual components
 option(G4TIME_USE "Output object execution times" OFF)
 if(G4TIME_USE)
@@ -85,11 +87,26 @@ endif()
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 #
-include_directories(${PROJECT_SOURCE_DIR}/include
+
+# Recursive find the directories contianing all the .hh, .h, and the .icc files, and add them to the search path for header files (include_directories)
+FILE(GLOB_RECURSE new_list ${PROJECT_SOURCE_DIR}/include/*.hh
+		${PROJECT_SOURCE_DIR}/include/*.h
+		${PROJECT_SOURCE_DIR}/include/*.icc
+		${PROJECT_SOURCE_DIR}/src/*.icc)
+SET(dir_list "")
+FOREACH(file_path ${new_list})
+	GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
+	SET(dir_list ${dir_list} ${dir_path})
+ENDFOREACH()
+LIST(REMOVE_DUPLICATES dir_list)
+SET(G4STORK_INCLUDE_DIR_LIST ${dir_list})
+
+include_directories(${G4STORK_INCLUDE_DIR_LIST}
                     ${Geant4_INCLUDE_DIR})
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc
+
+file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/src/*.cc
            ${PROJECT_SOURCE_DIR}/src/*.icc)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh
+file(GLOB_RECURSE headers ${PROJECT_SOURCE_DIR}/include/*.hh
            ${PROJECT_SOURCE_DIR}/include/*.h)
 
 
